@@ -80,17 +80,26 @@ $(document).ready(() => {
           }
         });
       }, 1000);
-    } else {
+    } else if (clickCount !== patternLength) {
       makeSound(userChosenColour);
     }
 
     if (clickCount === patternLength) {
+      let passedSound = new Audio("sounds/passed.mp3");
+      passedSound.volume = 0.1;
+      passedSound.play();
+      body.css("background-color", "limegreen");
+      setTimeout(function () {
+        body.css("background-color", "#011F3F");
+      }, 200);
       clickCount = -1;
       userClickedPattern = [];
       allButtons.css("pointer-events", "none");
       setTimeout(function () {
         initNewLevel();
       }, 1000);
+    } else if (answer) {
+      makeSound(userChosenColour);
     }
   });
 
