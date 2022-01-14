@@ -1,28 +1,30 @@
 $(document).ready(() => {
+  let entirePage = $(document);
+  let levelTitle = $("#level-title");
+  let body = $("body");
   // disable all buttons
-  $(".btn").css("pointer-events", "none");
+  let allButtons = $(".btn");
+  allButtons.css("pointer-events", "none");
 
   let buttonColours = ["red", "blue", "green", "yellow"];
   let gamePattern = [];
   let userClickedPattern = [];
   let level = 0;
   let hasStarted = false;
-  let userChosenColour;
   let clickCount = -1;
 
   // create a random number for the next sequence
   const nextSequence = () => {
     let randomNumber = Math.floor(Math.random() * 4);
     level++;
-    let levelTitle = $("#level-title");
     levelTitle.text("Level " + level);
     return randomNumber;
-  }
+  };
 
   // check answer for each step
   const checkAnswer = (index) => {
-    return (userClickedPattern[index] === gamePattern[index]) ? true : false;
-  }
+    return userClickedPattern[index] === gamePattern[index] ? true : false;
+  };
 
   // play sound
   const makeSound = (colour) => {
@@ -46,20 +48,20 @@ $(document).ready(() => {
         break;
     }
     audio.volume = 0.1;
-  }
+  };
 
   // animate the button on press
   const animatePress = (colour) => {
     let pressedButton = $("." + colour);
     pressedButton.addClass("pressed");
-    setTimeout(function() {
+    setTimeout(function () {
       pressedButton.removeClass("pressed");
     }, 100);
-  }
+  };
 
   // onclick function (game loop)
-  $(".btn").click((e) => {
-    userChosenColour = e.target.id;
+  allButtons.click((e) => {
+    let userChosenColour = e.target.id;
     animatePress(userChosenColour);
     userClickedPattern.push(userChosenColour);
     let patternLength = gamePattern.length - 1;
@@ -68,10 +70,10 @@ $(document).ready(() => {
 
     if (!answer) {
       gameOver();
-      $(document).off('keydown');
-      setTimeout(function() {
-        $("#level-title").text("Press A Key to Start");
-        $(document).on("keydown", () => {
+      entirePage.off("keydown");
+      setTimeout(function () {
+        levelTitle.text("Press A Key to Start");
+        entirePage.on("keydown", () => {
           if (!hasStarted) {
             hasStarted = true;
             initNewLevel();
@@ -85,8 +87,8 @@ $(document).ready(() => {
     if (clickCount === patternLength) {
       clickCount = -1;
       userClickedPattern = [];
-      $(".btn").css("pointer-events", "none");
-      setTimeout(function() {
+      allButtons.css("pointer-events", "none");
+      setTimeout(function () {
         initNewLevel();
       }, 1000);
     }
@@ -97,37 +99,36 @@ $(document).ready(() => {
     let gameOverSound = new Audio("sounds/wrong.mp3");
     gameOverSound.volume = 0.1;
     gameOverSound.play();
-    $(".btn").css("pointer-events", "none");
-    $("#level-title").text("Game Over!");
-    $("body").css("background-color", "red");
+    allButtons.css("pointer-events", "none");
+    levelTitle.text("Game Over!");
+    body.css("background-color", "red");
     setTimeout(function () {
-      $("body").css("background-color", "#011F3F");
+      body.css("background-color", "#011F3F");
     }, 200);
     gamePattern = [];
     userClickedPattern = [];
     level = 0;
     clickCount = -1;
     hasStarted = false;
-  }
+  };
 
   // initialize new level
   const initNewLevel = () => {
-    $(document).off('keydown');
-    $(".btn").css("pointer-events", "");
+    entirePage.off("keydown");
+    allButtons.css("pointer-events", "");
     let rnd = nextSequence();
     let randomChosenColour = buttonColours[rnd];
     gamePattern.push(randomChosenColour);
     let chosenButton = $("#" + randomChosenColour);
     chosenButton.fadeOut(100).fadeIn(100).fadeOut(100).fadeIn(100);
     makeSound(randomChosenColour);
-  }
+  };
 
   // start game
-  $(document).on("keydown", () => {
+  entirePage.on("keydown", () => {
     if (!hasStarted) {
       hasStarted = true;
       initNewLevel();
     }
   });
-
-})
+});
