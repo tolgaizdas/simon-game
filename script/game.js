@@ -1,5 +1,4 @@
 $(document).ready(() => {
-  let entirePage = $(document);
   let levelTitle = $("#level-title");
   let body = $("body");
   // disable all buttons
@@ -70,10 +69,10 @@ $(document).ready(() => {
 
     if (!answer) {
       gameOver();
-      entirePage.off("keydown");
       setTimeout(function () {
-        levelTitle.text("Press A Key to Start");
-        entirePage.on("keydown", () => {
+        levelTitle.css("pointer-events", "");
+        levelTitle.text("Press Me to Start");
+        levelTitle.on("click", () => {
           if (!hasStarted) {
             hasStarted = true;
             initNewLevel();
@@ -108,6 +107,7 @@ $(document).ready(() => {
     let gameOverSound = new Audio("sounds/wrong.mp3");
     gameOverSound.volume = 0.1;
     gameOverSound.play();
+    levelTitle.css("pointer-events", "none");
     allButtons.css("pointer-events", "none");
     levelTitle.text("Game Over!");
     body.css("background-color", "red");
@@ -123,7 +123,7 @@ $(document).ready(() => {
 
   // initialize new level
   const initNewLevel = () => {
-    entirePage.off("keydown");
+    levelTitle.css("pointer-events", "none");
     allButtons.css("pointer-events", "");
     let rnd = nextSequence();
     let randomChosenColour = buttonColours[rnd];
@@ -134,7 +134,7 @@ $(document).ready(() => {
   };
 
   // start game
-  entirePage.on("keydown", () => {
+  levelTitle.on("click", () => {
     if (!hasStarted) {
       hasStarted = true;
       initNewLevel();
