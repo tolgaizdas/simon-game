@@ -71,7 +71,7 @@ $(document).ready(() => {
       gameOver();
       setTimeout(function () {
         levelTitle.css("pointer-events", "");
-        levelTitle.text("Press Me to Start");
+        levelTitle.text("Click Me to Start");
         levelTitle.on("click", () => {
           if (!hasStarted) {
             hasStarted = true;
